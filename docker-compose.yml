@@ -20,6 +20,20 @@ services:
     volumes:
       - qdrant_data:/qdrant/storage
 
+  firebase:
+    image: node:18
+    container_name: firebase-emulator
+    working_dir: /workspace
+    volumes:
+      - ./firebase:/workspace
+    ports:
+      - "4000:4000"
+      - "9099:9099"
+    command: >
+      sh -c "
+      npm install -g firebase-tools &&
+      firebase emulators:start --only auth --project nextjs-nestjs-practice"
+
 volumes:
   pgdata:
   qdrant_data:
