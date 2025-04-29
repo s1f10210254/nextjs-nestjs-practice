@@ -5,6 +5,7 @@ import { PostsModule } from './posts/posts.module';
 import { NotesModule } from './notes/notes.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { DiaryModule } from './diary/diary.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
     PostsModule,
     NotesModule,
+    DiaryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
