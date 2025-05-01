@@ -10,7 +10,8 @@ cd server
 nest new .
 ```
 
-CORSの設定
+CORS の設定
+
 ```
 // main.ts(NestJS)
 app.enableCors({
@@ -18,18 +19,23 @@ app.enableCors({
 });
 ```
 
-NESTJSライブラリ
+NESTJS ライブラリ
+
 ```
 npm install --save @nestjs/config
 npm install --save @nestjs/typeorm typeorm pg
+npm i --save class-validator class-transformer
 ```
 
-Docker設定
+Docker 設定
+
 ```
 mkdir firebase
 touch firebase/firebase.json
 ```
+
 firebase/firebase.json
+
 ```
 {
   "emulators": {
@@ -48,6 +54,7 @@ firebase/firebase.json
 ```
 
 docker-compose.yml
+
 ```
 version: "3.9"
 services:
