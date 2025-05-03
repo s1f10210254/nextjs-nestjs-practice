@@ -6,6 +6,8 @@ import { NotesModule } from './notes/notes.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { DiaryModule } from './diary/diary.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { DiaryModule } from './diary/diary.module';
     PostsModule,
     NotesModule,
     DiaryModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
