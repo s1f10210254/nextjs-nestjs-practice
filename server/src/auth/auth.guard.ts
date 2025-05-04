@@ -24,19 +24,31 @@ export class AuthGuard implements CanActivate {
     // isPublicメタデータが見つかった場合、認証をスキップしてtrueを返す
     if (isPublic) return true;
 
-    const request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromHeader(request);
+    const request = context.switchToHttp().getRequest<Request>();
+    console.log('Request cookies:', request.cookies['jwt']);
+
+    const token = request.cookies['jwt'].access_token;
+    console.log('Token:', token);
+
     if (!token) {
       throw new UnauthorizedException();
     }
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
+      console.log('Verifying token...');
+      const payload = await this.jwtService.verifyAsync<{
+        sub: number;
+        nickname: string;
+        email: string;
+      }>(token as string, {
         secret: jwtConstants.secret,
       });
+      console.log('Payload:', payload);
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
       request['user'] = payload;
-    } catch {
+      console.log('Payload:', payload);
+    } catch (error) {
+      console.error('Token verification failed:', error); // エラー内容を出力
       throw new UnauthorizedException();
     }
     return true;

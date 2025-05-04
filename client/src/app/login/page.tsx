@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Login() {
@@ -6,6 +7,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const router = useRouter();
 
   const baseUrl = "http://localhost:8000/auth/login";
 
@@ -24,10 +26,12 @@ export default function Login() {
           email,
           password,
         }),
+        credentials: "include", // Include cookies in the request
       });
       const data = await response.json();
       if (response.ok) {
         setSuccessMessage("Login successful!");
+        router.push("/profile");
         console.log("Login successful", data);
       } else {
         setError(data.message || "Login failed. Please try again.");
