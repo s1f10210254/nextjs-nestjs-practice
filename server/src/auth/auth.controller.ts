@@ -1,16 +1,46 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Request,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { User } from 'src/users/user.entity';
+import { Public } from './decorators/public.decorator';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  //クライアントからのリクエストを受け取るエンドポイントを定義する
-  //ユーザーが認証された場合は、JWTトークンを返す
-  //理想的にはDTOクラスを使用して、リクエストボディのバリデーションを行う
+  // クライアントから送信されたユーザー名とパスワードをAuthServiceに渡してJWTを生成
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() data: { username: string; password: string }) {
-    return this.authService.signIn(data.username, data.password);
+  signIn(
+    @Body(new ValidationPipe())
+    signInDto: LoginDto,
+  ) {
+    return this.authService.signIn(signInDto.email, signInDto.password);
   }
+
+  // ユーザーを登録するメソッド
+  @Public()
+  @Post('register')
+  async register(
+    @Body(new ValidationPipe())
+    registerDto: RegisterDto,
+  ): Promise<User> {
+    return this.authService.register(registerDto);
+  }
+
+  // @UseGuards(AuthGuard)
+  // @Get('profile')
+  // getProfile(@Request() req) {
+  //   return req.user;
+  // }
 }
