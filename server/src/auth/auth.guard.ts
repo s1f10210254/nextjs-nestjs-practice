@@ -9,7 +9,9 @@ import { jwtConstants } from './constants';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from './decorators/public.decorator';
+import { UserPayload } from './interfaces/user-payload.interface';
 
+// JWT認証ガード クッキーからJWTを取得し、検証する
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
@@ -25,37 +27,22 @@ export class AuthGuard implements CanActivate {
     if (isPublic) return true;
 
     const request = context.switchToHttp().getRequest<Request>();
-    console.log('Request cookies:', request.cookies['jwt']);
 
-    const token = request.cookies['jwt'].access_token;
-    console.log('Token:', token);
+    const token = request.cookies['access_token'] as string;
+    // console.log('access_token:', token);
 
     if (!token) {
       throw new UnauthorizedException();
     }
     try {
-      console.log('Verifying token...');
-      const payload = await this.jwtService.verifyAsync<{
-        sub: number;
-        nickname: string;
-        email: string;
-      }>(token as string, {
+      const payload = await this.jwtService.verifyAsync<UserPayload>(token, {
         secret: jwtConstants.secret,
       });
-      console.log('Payload:', payload);
-      // 💡 We're assigning the payload to the request object here
-      // so that we can access it in our route handlers
       request['user'] = payload;
-      console.log('Payload:', payload);
     } catch (error) {
-      console.error('Token verification failed:', error); // エラー内容を出力
+      console.error('Token verification failed:', error);
       throw new UnauthorizedException();
     }
     return true;
-  }
-
-  private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
   }
 }
