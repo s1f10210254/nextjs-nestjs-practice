@@ -18,14 +18,10 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Request, Response } from 'express';
 import { AuthGuard } from './auth.guard';
-import { JwtService } from '@nestjs/jwt';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   // クライアントから送信されたユーザー名とパスワードをAuthServiceに渡しaccess_tokenを生成
   @Public()
@@ -51,7 +47,7 @@ export class AuthController {
       httpOnly: true,
       sameSite: 'strict', // CSRF対策
       path: '/',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7日間有効
+      maxAge: 30 * 24 * 60 * 60 * 1000, // クッキーの有効期限を30日後に設定
     });
 
     console.log('access_token:', access_token);

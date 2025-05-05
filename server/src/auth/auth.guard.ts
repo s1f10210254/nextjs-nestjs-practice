@@ -19,6 +19,7 @@ export class AuthGuard implements CanActivate {
     private reflector: Reflector,
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    // リフレクターを使用して、isPublicメタデータを取得
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -29,7 +30,6 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
 
     const token = request.cookies['access_token'] as string;
-    // console.log('access_token:', token);
 
     if (!token) {
       throw new UnauthorizedException('No token provided');
