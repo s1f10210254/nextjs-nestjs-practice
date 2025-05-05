@@ -111,8 +111,8 @@ export class AuthService {
     const refreshTokenEntity =
       await this.refreshTokenRepository.findRefreshToken(refreshToken);
     if (refreshTokenEntity) {
-      await this.refreshTokenRepository.deleteRefreshToken(
-        refreshTokenEntity.id,
+      await this.refreshTokenRepository.deleteUserRefreshTokens(
+        refreshTokenEntity.userId,
       );
     }
   }

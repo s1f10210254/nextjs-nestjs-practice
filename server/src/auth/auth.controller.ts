@@ -18,10 +18,14 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Request, Response } from 'express';
 import { AuthGuard } from './auth.guard';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private jwtService: JwtService,
+  ) {}
 
   // クライアントから送信されたユーザー名とパスワードをAuthServiceに渡しaccess_tokenを生成
   @Public()
@@ -49,6 +53,9 @@ export class AuthController {
       path: '/',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7日間有効
     });
+
+    console.log('access_token:', access_token);
+    console.log('refreshToken:', refreshToken);
 
     return { message: 'Login successful' };
   }
@@ -92,7 +99,9 @@ export class AuthController {
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const refreshToken = req.cookies['refreshToken'] as string;
 
-    if (refreshToken) await this.authService.logout(refreshToken);
+    if (refreshToken) {
+      await this.authService.logout(refreshToken);
+    }
 
     //Client側のクッキーを削除
     res.clearCookie('access_token', {
