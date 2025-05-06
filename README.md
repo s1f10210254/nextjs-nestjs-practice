@@ -10,15 +10,6 @@ cd server
 nest new .
 ```
 
-CORS の設定
-
-```
-// main.ts(NestJS)
-app.enableCors({
-  origin: 'http://localhost:3000', // Next.jsが動いてるURL
-});
-```
-
 NESTJS ライブラリ
 
 ```
