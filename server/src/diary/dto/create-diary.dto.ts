@@ -16,7 +16,7 @@ export class CreateDiaryDto {
 
   @IsOptional()
   @IsEnum(['red', 'orange', 'yellow', 'green', 'blue'])
-  mood_color?: 'red' | 'orange' | 'yellow' | 'green' | 'blue';
+  color?: 'red' | 'orange' | 'yellow' | 'green' | 'blue';
 
   @IsNotEmpty()
   @IsString()

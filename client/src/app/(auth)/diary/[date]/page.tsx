@@ -39,7 +39,7 @@ export default function DiaryPage() {
             <strong>タグ:</strong> {diary.tags || "なし"}
           </p>
           <p>
-            <strong>感情:</strong> {diary.mood_color || "未設定"}
+            <strong>色:</strong> {diary.color || "未設定"}
           </p>
           <button
             onClick={() => router.push(`/diary/${date}/edit`)}

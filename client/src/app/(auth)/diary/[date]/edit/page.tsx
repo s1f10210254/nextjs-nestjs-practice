@@ -3,14 +3,17 @@ import { Loading } from "@/components/Loading/Loading";
 import { createDiary, fetchDiaryByDate, updateDiary } from "@/lib/api/diary";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { COLOR_OPTIONS, TAG_OPTIONS } from "../../types";
+
+type ColorType = "red" | "orange" | "yellow" | "green" | "blue";
 
 export default function DiaryEditPage() {
   const { date } = useParams();
   const router = useRouter();
 
   const [content, setContent] = useState("");
-  const [tags, setTags] = useState("");
-  const [moodColor, setMoodColor] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [color, setColor] = useState<ColorType>("red");
   const [isNew, setIsNew] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -23,8 +26,8 @@ export default function DiaryEditPage() {
         if (data) {
           setIsNew(false);
           setContent(data.recorded_content);
-          setTags(data.tags || "");
-          setMoodColor(data.mood_color || "");
+          setSelectedTags(data.tags?.split(",") || []);
+          setColor(data.color);
         }
       })
       .catch((err) => {
@@ -32,6 +35,12 @@ export default function DiaryEditPage() {
         setError("日記の取得に失敗しました");
       });
   }, [date]);
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  };
 
   const handleSubmit = async () => {
     if (!content.trim()) {
@@ -42,8 +51,8 @@ export default function DiaryEditPage() {
     try {
       const payload = {
         recorded_content: content,
-        tags,
-        moodColor: moodColor,
+        tags: selectedTags.join(","),
+        color: color,
       };
 
       if (isNew) {
@@ -74,21 +83,40 @@ export default function DiaryEditPage() {
         onChange={(e) => setContent(e.target.value)}
       />
 
-      <input
-        type="text"
-        className="w-full border rounded p-2"
-        placeholder="タグ（カンマ区切り）"
-        value={tags}
-        onChange={(e) => setTags(e.target.value)}
-      />
+      <div className="space-y-2">
+        <p className="font-semibold">タグを選択：</p>
+        <div className="flex flex-wrap gap-2">
+          {TAG_OPTIONS.map((tag) => (
+            <label key={tag} className="flex items-center gap-1">
+              <input
+                type="checkbox"
+                checked={selectedTags.includes(tag)}
+                onChange={() => toggleTag(tag)}
+              />
+              {tag}
+            </label>
+          ))}
+        </div>
+      </div>
 
-      <input
-        type="text"
-        className="w-full border rounded p-2"
-        placeholder="感情の色（例: red, blue, green）"
-        value={moodColor}
-        onChange={(e) => setMoodColor(e.target.value)}
-      />
+      <div className="space-y-2">
+        <p className="font-semibold">感情の色を選択：</p>
+        <div className="flex gap-2">
+          {COLOR_OPTIONS.map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => setColor(c as ColorType)}
+              className={`w-8 h-8 rounded-full border-2 ${
+                color === c ? "ring-2 ring-black" : ""
+              }`}
+              style={{ backgroundColor: c }}
+              title={c}
+            />
+          ))}
+        </div>
+        <p className="text-sm text-gray-600">選択中の色: {color}</p>
+      </div>
 
       <button
         onClick={handleSubmit}
