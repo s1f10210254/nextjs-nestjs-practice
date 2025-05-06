@@ -8,10 +8,14 @@ import { ConfigModule } from '@nestjs/config';
 import { DiaryModule } from './diary/diary.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { VectorService } from './vector/vector.service';
+import { VectorModule } from './vector/vector.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.POSTGRES_HOST,
@@ -27,8 +31,9 @@ import { UsersModule } from './users/users.module';
     DiaryModule,
     AuthModule,
     UsersModule,
+    VectorModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, VectorService],
 })
 export class AppModule {}
