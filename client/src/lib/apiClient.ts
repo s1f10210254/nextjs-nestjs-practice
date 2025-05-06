@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiClient = axios.create({
+export const apiClient = axios.create({
   baseURL: "http://localhost:8000", // ← NestJSのAPIサーバーURLに合わせる
   withCredentials: true, // Cookieを送信
 });
@@ -26,11 +26,6 @@ apiClient.interceptors.response.use(
         }
       } catch (refreshError) {
         console.error("リフレッシュ失敗:", refreshError);
-
-        // 🔴 リフレッシュも失敗 → 強制ログアウト（ログインページへ）
-        if (typeof window !== "undefined") {
-          window.location.href = "/login";
-        }
       }
     }
 

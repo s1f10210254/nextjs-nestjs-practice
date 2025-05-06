@@ -1,4 +1,5 @@
 import { RefreshToken } from 'src/auth/entities/refresh-token.entity';
+import { Diary } from 'src/diary/entities/diary.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('users')
@@ -25,6 +26,11 @@ export class User {
   })
   updatedAt: Date;
 
+  // リフレッシュトークンとのリレーション
   @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
   refreshTokens: RefreshToken[];
+
+  // Diaryとのリレーション
+  @OneToMany(() => Diary, (diary) => diary.user)
+  diarys: Diary[];
 }

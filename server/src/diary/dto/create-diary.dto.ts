@@ -1,15 +1,12 @@
 import {
   IsDateString,
-  IsInt,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
 
 export class CreateDiaryDto {
-  @IsInt()
-  user_id: number;
-
   @IsDateString()
   date: string;
 
@@ -18,8 +15,8 @@ export class CreateDiaryDto {
   weather?: string;
 
   @IsOptional()
-  @IsString()
-  mood_color?: string;
+  @IsEnum(['red', 'orange', 'yellow', 'green', 'blue'])
+  mood_color?: 'red' | 'orange' | 'yellow' | 'green' | 'blue';
 
   @IsNotEmpty()
   @IsString()
@@ -28,4 +25,8 @@ export class CreateDiaryDto {
   @IsOptional()
   @IsString()
   ai_advice_content?: string;
+
+  @IsOptional()
+  @IsString()
+  tags?: string;
 }
