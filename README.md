@@ -24,34 +24,10 @@ NESTJS ライブラリ
 ```
 npm install --save @nestjs/config
 npm install --save @nestjs/typeorm typeorm pg
-npm i --save class-validator class-transformer
+npm i --save class-validator class-transformer @nestjs/graphql
 ```
 
 Docker 設定
-
-```
-mkdir firebase
-touch firebase/firebase.json
-```
-
-firebase/firebase.json
-
-```
-{
-  "emulators": {
-    "auth": {
-      "host": "0.0.0.0",
-      "port": 9099
-    },
-    "ui": {
-      "enabled": true,
-      "host": "0.0.0.0",
-      "port": 4000
-    }
-  }
-}
-
-```
 
 docker-compose.yml
 
@@ -77,20 +53,6 @@ services:
       - "6333:6333"
     volumes:
       - qdrant_data:/qdrant/storage
-
-  firebase:
-    image: node:18
-    container_name: firebase-emulator
-    working_dir: /workspace
-    volumes:
-      - ./firebase:/workspace
-    ports:
-      - "4000:4000"
-      - "9099:9099"
-    command: >
-      sh -c "
-      npm install -g firebase-tools &&
-      firebase emulators:start --only auth --project nextjs-nestjs-practice"
 
 volumes:
   pgdata:
