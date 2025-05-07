@@ -10,6 +10,8 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { VectorService } from './vector/vector.service';
 import { VectorModule } from './vector/vector.module';
+import { QuestionsModule } from './questions/questions.module';
+import { AnswersModule } from './answers/answers.module';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { VectorModule } from './vector/vector.module';
     AuthModule,
     UsersModule,
     VectorModule,
+    QuestionsModule,
+    AnswersModule,
   ],
   controllers: [AppController],
   providers: [AppService, VectorService],

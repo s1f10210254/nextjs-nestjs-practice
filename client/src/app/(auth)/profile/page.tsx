@@ -1,11 +1,19 @@
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 export default function Profile() {
   const { user, logout } = useAuth();
+  const router = useRouter();
   const handleLogout = async () => {
-    await logout();
+    if (confirm("本当にログアウトしますか？")) {
+      await logout();
+    }
+  };
+
+  const handleConsultationPage = () => {
+    router.push("/consultation");
   };
 
   return (
@@ -20,6 +28,10 @@ export default function Profile() {
 
       <div className="flex flex-col items-center border-2 border-gray-300 rounded-lg p-4">
         <button onClick={handleLogout}>ログアウト</button>
+      </div>
+
+      <div className="flex flex-col items-center border-2 border-gray-300 rounded-lg p-4">
+        <button onClick={handleConsultationPage}>相談ページへ</button>
       </div>
     </div>
   );

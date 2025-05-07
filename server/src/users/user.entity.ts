@@ -1,5 +1,6 @@
 import { RefreshToken } from 'src/auth/entities/refresh-token.entity';
 import { Diary } from 'src/diary/entities/diary.entity';
+import { Question } from 'src/questions/entities/question.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('users')
@@ -33,4 +34,12 @@ export class User {
   // Diaryとのリレーション
   @OneToMany(() => Diary, (diary) => diary.user)
   diarys: Diary[];
+
+  // Questionとのリレーション
+  @OneToMany(() => Question, (question) => question.user)
+  questions: Question[];
+
+  // Answerとのリレーション
+  @OneToMany(() => Question, (answer) => answer.user)
+  answers: Question[];
 }
