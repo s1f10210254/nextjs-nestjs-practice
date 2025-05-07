@@ -13,6 +13,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { JWTPayload } from 'src/common/interface/JWTPayload.interface';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('questions')
 export class QuestionsController {
@@ -23,7 +24,7 @@ export class QuestionsController {
   @Post()
   create(
     @Body() createQuestionDto: CreateQuestionDto,
-    currentUser: JWTPayload,
+    @CurrentUser() currentUser: JWTPayload,
   ) {
     return this.questionsService.createQuestion(
       createQuestionDto,
@@ -38,19 +39,15 @@ export class QuestionsController {
     return this.questionsService.getMyQuestions(user.sub);
   }
 
-  // 質問を全て取得
-  @Get()
-  getAllQuestions() {
-    return this.questionsService.getAllQuestions();
-  }
-
   // 質問をIDで取得
+  @Public()
   @Get(':id')
   getQuestionById(@Param('id') id: string) {
     return this.questionsService.getQuestionById(+id);
   }
 
   // 質問をフィルタリングして取得
+  @Public()
   @Get()
   getFilteredQuestions(
     @Query('tag') tag?: string,

@@ -14,8 +14,8 @@ export class Answer {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('text')
-  answer_content: string;
+  @Column('text', { name: 'answer_content' })
+  content: string;
 
   @Column({ default: false })
   is_anonymous: boolean;

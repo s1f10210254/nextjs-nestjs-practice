@@ -14,11 +14,14 @@ export class QuestionsService {
 
   //質問を新規作成
   async createQuestion(
-    createQuestionDto: CreateQuestionDto,
+    dto: CreateQuestionDto,
     userId: number,
   ): Promise<Question> {
     const question = this.questionRepository.create({
-      ...createQuestionDto,
+      title: dto.title,
+      content: dto.content,
+      tags: dto.tags ?? [],
+      is_anonymous: dto.is_anonymous ?? false,
       user: { id: userId } as User,
     });
     return await this.questionRepository.save(question);
@@ -44,7 +47,7 @@ export class QuestionsService {
   async getQuestionById(questionId: number): Promise<Question> {
     const question = await this.questionRepository.findOne({
       where: { id: questionId },
-      relations: ['user'],
+      relations: ['user', 'answers'],
     });
     if (!question) {
       throw new Error('Question not found');
@@ -57,13 +60,19 @@ export class QuestionsService {
     status?: string,
   ): Promise<Question[]> {
     const query = this.questionRepository.createQueryBuilder('question');
+
     if (tag) {
-      query.andWhere(':tag = ANY(question.tags)', { tag });
+      query.andWhere(':tag = ANY (question.tags)', { tag });
     }
+
     if (status) {
       query.andWhere('question.status = :status', { status });
     }
+
     query.orderBy('question.created_at', 'DESC');
-    return await query.getMany();
+
+    const result = await query.getMany();
+    console.log('🔍 質問一覧:', result);
+    return result;
   }
 }

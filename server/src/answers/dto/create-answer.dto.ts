@@ -9,7 +9,7 @@ import {
 export class CreateAnswerDto {
   @IsString()
   @IsNotEmpty()
-  answer_content: string;
+  content: string;
 
   @IsNumber()
   questionId: number;

@@ -26,7 +26,7 @@ export class Question {
   title: string;
 
   @Column('text')
-  question_content: string;
+  content: string;
 
   @Column({ type: 'json', nullable: true })
   tags: string[];

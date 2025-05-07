@@ -18,17 +18,20 @@ export class AnswersService {
 
   // 質問に対する回答を新規作成
   async createAnswer(dto: CreateAnswerDto, userId: number): Promise<Answer> {
+    console.log('userId', userId);
     const question = await this.questionRepository.findOneBy({
       id: dto.questionId,
     });
+    console.log('question', question);
     if (!question) throw new Error('Question not found');
 
     const answer = this.answerRepository.create({
-      answer_content: dto.answer_content,
+      content: dto.content,
       user: { id: userId } as User,
       question,
       is_anonymous: dto.is_anonymous ?? false,
     });
+    console.log('answer', answer);
 
     return await this.answerRepository.save(answer);
   }

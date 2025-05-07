@@ -4,6 +4,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { CreateAnswerDto } from './dto/create-answer.dto';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { JWTPayload } from 'src/common/interface/JWTPayload.interface';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('answers')
 export class AnswersController {
@@ -17,6 +18,7 @@ export class AnswersController {
   }
 
   // 質問IDで回答を取得
+  @Public()
   @Get()
   getAnswersByQuestionId(@Query('questionId') questionId: string) {
     return this.answersService.getAnswersByQuestionId(+questionId);

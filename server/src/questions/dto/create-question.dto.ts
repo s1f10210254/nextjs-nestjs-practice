@@ -13,7 +13,7 @@ export class CreateQuestionDto {
 
   @IsString()
   @IsNotEmpty()
-  question_content: string;
+  content: string;
 
   @IsArray()
   @IsOptional()
