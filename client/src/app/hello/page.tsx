@@ -15,38 +15,36 @@ export default function Home() {
   ];
 
   return (
-    <main className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-orange-50 via-white to-white px-6 text-center overflow-hidden">
-      {/* 背景の光レイヤー① */}
+    <main className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-orange-50 via-white to-white px-6 text-center overflow-hidden py-16">
+      {/* 背景レイヤー */}
       <div
         className="absolute w-[1000px] h-[1000px] rounded-full bg-orange-100 blur-[120px] opacity-40 animate-pulseLight"
         style={{ top: "-20%", left: "-30%" }}
       />
-
-      {/* 背景の光レイヤー② */}
       <div
         className="absolute w-[600px] h-[600px] rounded-full bg-orange-200 blur-[100px] opacity-20 animate-pulseLightSlow"
         style={{ bottom: "-10%", right: "-20%" }}
       />
 
-      {/* アプリ名（最初に登場） */}
+      {/* アプリ名 */}
       <motion.h1
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 1 }}
-        className="mb-10 text-4xl font-kurenaido text-orange-400 tracking-wide z-10"
-        style={{ textShadow: "0 0 8px rgba(255, 165, 0, 0.3)" }}
+        className="text-4xl font-kurenaido text-orange-400 tracking-wide z-10"
+        style={{ textShadow: "0 0 10px rgba(255, 165, 0, 0.3)" }}
       >
         Unmute
       </motion.h1>
 
       {/* キャッチコピー */}
-      <div className="max-w-3xl space-y-6 z-10">
+      <div className="max-w-3xl space-y-6 mt-16 z-10">
         {catchLines.map((lines, index) => (
           <motion.p
             key={index}
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 + index * 0.5, duration: 0.8 }}
+            transition={{ delay: 0.8 + index * 0.5, duration: 0.8 }}
             className="text-gray-500 text-xl md:text-2xl leading-loose font-shippori"
           >
             {lines.map((line, i) => (
@@ -62,7 +60,7 @@ export default function Home() {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 4.2, duration: 0.8 }}
+        transition={{ delay: 3.8, duration: 0.8 }}
         className="mt-12 flex flex-col sm:flex-row gap-4 z-10"
       >
         <Link
@@ -79,7 +77,7 @@ export default function Home() {
         </Link>
       </motion.div>
 
-      {/* アニメーションの keyframes をグローバルに定義 */}
+      {/* 背景アニメーション keyframes */}
       <style jsx global>{`
         @keyframes pulseLight {
           0%,
@@ -92,7 +90,6 @@ export default function Home() {
             opacity: 0.4;
           }
         }
-
         @keyframes pulseLightSlow {
           0%,
           100% {
@@ -104,11 +101,9 @@ export default function Home() {
             opacity: 0.3;
           }
         }
-
         .animate-pulseLight {
           animation: pulseLight 10s ease-in-out infinite;
         }
-
         .animate-pulseLightSlow {
           animation: pulseLightSlow 14s ease-in-out infinite;
         }
