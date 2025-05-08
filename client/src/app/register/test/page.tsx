@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
+
 import Link from "next/link";
 
 export default function SignupPage() {
@@ -12,12 +14,24 @@ export default function SignupPage() {
     <main className="h-screen flex items-center justify-center bg-white px-4">
       <div className="w-full max-w-md space-y-8">
         {/* アプリ名とキャッチ */}
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-orange-500 mb-2">
-            悩みノート
-          </h1>
-        </div>
 
+        <div className="text-center">
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-4xl font-bold text-orange-500 mb-2"
+          >
+            Unmute
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            className="text-gray-600 text-sm tracking-wide"
+          ></motion.p>
+        </div>
         {/* フォーム */}
         <form className="space-y-6">
           <div>
