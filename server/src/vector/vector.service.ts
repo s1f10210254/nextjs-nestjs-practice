@@ -100,7 +100,7 @@ export class VectorService {
           id: diary.diaryId,
           vector: vector,
           payload: {
-            user_id: diary.userId,
+            userId: diary.userId,
             date: diary.date,
             content: diary.content,
             tags: diary.tags,

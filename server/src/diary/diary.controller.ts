@@ -36,9 +36,10 @@ export class DiaryController {
     const emotion = this.mapColorToEmotion(diary.color);
     const similarDiaries = await this.ragService.findSimilarUserDiaries({
       userId: user.sub,
+      date: diary.date,
       content: diary.recorded_content,
-      tags: diary.tags,
-      emotion: emotion,
+      tags: diary.tags ?? [],
+      emotion,
     });
 
     return {

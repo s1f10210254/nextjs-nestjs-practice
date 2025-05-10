@@ -15,9 +15,11 @@ export class RagService {
   // 自分の過去の日記の中から意味が近く感情やタグも近いものを探すメソッド
   // ただし、感情は±1の範囲で、タグは一致するものを探す
   // 返り値は日記の配列(Diary[])
+
   async findSimilarUserDiaries(input: {
     userId: number;
     content: string;
+    date: string;
     tags: string[];
     emotion: number;
   }): Promise<Diary[]> {
@@ -25,17 +27,20 @@ export class RagService {
 
     const filter = {
       must: [
-        // { key: 'userId', match: { value: input.userId } },
+        { key: 'user_id', match: { value: input.userId } },
+        {
+          key: 'date',
+          range: { lt: input.date },
+        },
         // {
         //   key: 'emotion',
         //   range: { gte: input.emotion - 1, lte: input.emotion + 1 },
         // },
       ],
-      // should: input.tags.map((tag) => ({
-      //   key: 'tags',
-      //   match: { value: tag },
-      // })),
-      // minimum_should_match: 1,
+      should: input.tags.map((tag) => ({
+        key: 'tags',
+        match: { value: tag },
+      })),
     };
 
     const results = await this.vectorService.searchQdrant({
@@ -45,11 +50,8 @@ export class RagService {
     });
     console.log('Qdrant search results:', results);
 
-    const ids = results
-      .filter((r) => r.payload != null)
-      .map((r) => r.payload?.user_id);
-
-    if (ids.length === 0) return [];
+    const ids = results.map((result) => result.id);
+    // if (ids.length === 0) return [];
     return this.diaryRepository.find({
       where: { id: In(ids) },
     });
@@ -60,21 +62,32 @@ export class RagService {
     similarDiaries: Diary[],
   ): string {
     const context = similarDiaries
-      .map((d) => `- ${d.recorded_content}`)
-      .join('\n');
+      .map(
+        (d) => `【日付: ${d.date} | タグ: ${d.tags?.join(', ') || 'なし'}】
+  ${d.recorded_content}`,
+      )
+      .join('\n\n');
+
     return `
-  現在の悩み:
+  あなたは共感的なカウンセラーです。
+  以下の悩みに対して、優しく丁寧なアドバイスを300文字程度で書いてください。
+  言葉選びに気を配り、ネガティブな感情を否定せず、寄り添うようにしてください。
+  回答の相手は悩みを書いた本人です。
+  
+  【現在の悩み】
   ${currentContent}
   
-  過去の似た悩み:
+  【参考になりそうな過去の悩み】
   ${context}
   
-  上記を参考にして、優しく丁寧なアドバイスを出してください。
+  この情報をもとに、相手が少しでも前向きな気持ちになれるようなアドバイスを作成してください。
     `.trim();
   }
+
   async generateAndStoreAdviceForDiary(input: {
     diaryId: number;
     userId: number;
+    date: string;
     content: string;
     emotion: number;
     tags: string[];
@@ -82,6 +95,7 @@ export class RagService {
     //類似日記を検索
     const similarDiaries = await this.findSimilarUserDiaries({
       userId: input.userId,
+      date: input.date,
       content: input.content,
       tags: input.tags,
       emotion: input.emotion,

@@ -1,4 +1,5 @@
 "use client";
+
 import { Loading } from "@/components/Loading/Loading";
 import { createDiary, fetchDiaryByDate, updateDiary } from "@/lib/api/diary";
 import { useParams, useRouter } from "next/navigation";
@@ -22,13 +23,11 @@ export default function DiaryEditPage() {
     if (!date || typeof date !== "string") return;
 
     fetchDiaryByDate(date)
-      .then((data) => {
-        if (data) {
-          setIsNew(false);
-          setContent(data.recorded_content);
-          setSelectedTags(data.tags?.split(",") || []);
-          setColor(data.color);
-        }
+      .then(({ diary }) => {
+        setIsNew(false);
+        setContent(diary.recorded_content || "");
+        setSelectedTags(diary.tags || []);
+        setColor(diary.color || "red");
       })
       .catch((err) => {
         console.error("取得失敗", err);
@@ -51,7 +50,7 @@ export default function DiaryEditPage() {
     try {
       const payload = {
         recorded_content: content,
-        tags: selectedTags.join(","),
+        tags: selectedTags,
         color: color,
       };
 
@@ -60,6 +59,7 @@ export default function DiaryEditPage() {
       } else {
         await updateDiary(date as string, payload);
       }
+
       router.push(`/diary/${date}`);
     } catch (err) {
       console.error("送信失敗", err);
@@ -74,7 +74,9 @@ export default function DiaryEditPage() {
       <h1 className="text-2xl font-bold mb-4">
         {date} の日記を{isNew ? "新規作成" : "編集"}
       </h1>
+
       {error && <p className="text-red-500">{error}</p>}
+
       <textarea
         className="w-full border rounded p-2"
         rows={8}

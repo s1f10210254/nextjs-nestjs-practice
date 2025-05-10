@@ -43,6 +43,7 @@ export const QuestionForm = () => {
       setContent("");
       setSelectedTags([]);
       router.refresh();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
     }

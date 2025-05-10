@@ -18,6 +18,7 @@ export class RagController {
       await this.ragService.generateAndStoreAdviceForDiary({
         diaryId,
         userId: diary.user.id,
+        date: diary.date,
         content: diary.recorded_content,
         tags: diary.tags,
         emotion: emotion,

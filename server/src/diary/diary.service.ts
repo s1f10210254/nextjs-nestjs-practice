@@ -67,6 +67,7 @@ export class DiaryService {
     const { advice, similarDiaries } =
       await this.ragService.generateAndStoreAdviceForDiary({
         diaryId: savedDiary.id,
+        date: savedDiary.date,
         userId: savedDiary.user.id,
         content: savedDiary.recorded_content,
         emotion: emotion,
@@ -118,6 +119,7 @@ export class DiaryService {
       await this.ragService.generateAndStoreAdviceForDiary({
         diaryId: diary.id,
         userId: diary.user.id,
+        date: diary.date,
         content: content,
         emotion: emotion,
         tags: tags,
