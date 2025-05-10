@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { VectorService } from './vector.service';
 
-@Module({})
-export class VectorModule {
-  private: [VectorService];
-  exports: [VectorService];
-}
+@Module({
+  providers: [VectorService],
+  exports: [VectorService],
+})
+export class VectorModule {}

@@ -12,6 +12,7 @@ import { VectorService } from './vector/vector.service';
 import { VectorModule } from './vector/vector.module';
 import { QuestionsModule } from './questions/questions.module';
 import { AnswersModule } from './answers/answers.module';
+import { RagModule } from './rag/rag.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AnswersModule } from './answers/answers.module';
     VectorModule,
     QuestionsModule,
     AnswersModule,
+    RagModule,
   ],
   controllers: [AppController],
   providers: [AppService, VectorService],

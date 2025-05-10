@@ -1,10 +1,12 @@
 import {
+  IsArray,
   IsDateString,
   IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
+import { TAG_OPTIONS } from '../entities/diary.entity';
 
 export class CreateDiaryDto {
   @IsDateString()
@@ -14,9 +16,8 @@ export class CreateDiaryDto {
   @IsString()
   weather?: string;
 
-  @IsOptional()
   @IsEnum(['red', 'orange', 'yellow', 'green', 'blue'])
-  color?: 'red' | 'orange' | 'yellow' | 'green' | 'blue';
+  color: 'red' | 'orange' | 'yellow' | 'green' | 'blue';
 
   @IsNotEmpty()
   @IsString()
@@ -24,9 +25,10 @@ export class CreateDiaryDto {
 
   @IsOptional()
   @IsString()
-  ai_advice_content?: string;
+  ai_advice_content: string = '';
 
   @IsOptional()
-  @IsString()
-  tags?: string;
+  @IsArray()
+  @IsEnum(TAG_OPTIONS, { each: true })
+  tags: (typeof TAG_OPTIONS)[number][] = [];
 }
