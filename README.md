@@ -49,3 +49,16 @@ volumes:
   pgdata:
   qdrant_data:
 ```
+
+env 　設定
+
+```
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=user
+POSTGRES_PASSWORD=password
+POSTGRES_DB=mydb
+
+
+GEMINI_API_KEY=
+```
