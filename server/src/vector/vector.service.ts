@@ -61,8 +61,8 @@ export class VectorService {
   }
 
   // Qdrantにコレクションが存在しない場合は作成するメソッド
-  async createCollection() {
-    const collectionName = 'diary_entries';
+  async createCollection(collectionName: string) {
+    // const collectionName = 'diary_entries';
     const listCollections = await qdrantClient.getCollections();
     if (listCollections.collections.some((c) => c.name === collectionName)) {
       console.log(`❌ コレクション '${collectionName}' は既に存在します`);
@@ -93,10 +93,11 @@ export class VectorService {
   }) {
     const vector = await this.generateEmbedding(diary.content);
 
+    const collectionName = 'diary_entries';
     //Collectionが存在しない場合は作成;
-    await this.createCollection();
+    await this.createCollection(collectionName);
 
-    await qdrantClient.upsert('diary_entries', {
+    await qdrantClient.upsert(collectionName, {
       wait: true,
       points: [
         {
@@ -115,11 +116,56 @@ export class VectorService {
   }
 
   // Qdrantから日記を取得するメソッド
-  async searchQdrant(params: { vector: number[]; filter: any; topK?: number }) {
+  async searchDiaryToQdrant(params: {
+    vector: number[];
+    filter: any;
+    topK?: number;
+  }) {
     return qdrantClient.search('diary_entries', {
       vector: params.vector,
       filter: params.filter,
       limit: params.topK ?? 5,
+    });
+  }
+
+  // 質問の内容をQdrantに保存するメソッド
+  async saveQuestionToQdrant(question: {
+    questionId: number;
+    userId: number;
+    date: string;
+    content: string;
+    tags?: string[];
+  }) {
+    const collectionName = 'question_entries';
+    const embedding = await this.generateEmbedding(question.content);
+    await this.createCollection(collectionName);
+
+    await qdrantClient.upsert(collectionName, {
+      wait: true,
+      points: [
+        {
+          id: question.questionId,
+          vector: embedding,
+          payload: {
+            userId: question.userId,
+            date: question.date,
+            content: question.content,
+            tags: question.tags,
+          },
+        },
+      ],
+    });
+  }
+
+  async searchQuestionToQdrant(vector: number[], tags: string[], topK = 5) {
+    return qdrantClient.search('question_entries', {
+      vector: vector,
+      filter: {
+        tags: {
+          $in: tags,
+        },
+      },
+      limit: topK,
     });
   }
 

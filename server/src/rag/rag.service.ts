@@ -43,7 +43,7 @@ export class RagService {
       })),
     };
 
-    const results = await this.vectorService.searchQdrant({
+    const results = await this.vectorService.searchDiaryToQdrant({
       vector,
       filter,
       topK: 5,
