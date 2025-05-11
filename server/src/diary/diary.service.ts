@@ -6,6 +6,7 @@ import { CreateDiaryDto } from './dto/create-diary.dto';
 import { UpdateDiaryDto } from './dto/update-diary.dto';
 import { VectorService } from 'src/vector/vector.service';
 import { RagService } from 'src/rag/rag.service';
+import { mapColorToEmotion } from 'src/common/utils/emotion.util';
 
 @Injectable()
 export class DiaryService {
@@ -48,7 +49,7 @@ export class DiaryService {
       date,
       user: { id: userId },
     });
-    const emotion = this.mapColorToEmotion(dto.color);
+    const emotion = mapColorToEmotion(dto.color);
 
     // 1：日記保存
     const savedDiary = await this.diaryRepository.save(diary);
@@ -97,7 +98,7 @@ export class DiaryService {
     const color = dto.color ?? diary.color;
 
     // 感情変換
-    const emotion = this.mapColorToEmotion(color);
+    const emotion = mapColorToEmotion(color);
 
     //1 内容更新
     await this.diaryRepository.update(diary.id, {
@@ -140,16 +141,5 @@ export class DiaryService {
 
   async remove(id: number): Promise<void> {
     await this.diaryRepository.delete(id);
-  }
-
-  private mapColorToEmotion(color: string): number {
-    const map: Record<string, number> = {
-      blue: 1,
-      green: 2,
-      yellow: 3,
-      orange: 4,
-      red: 5,
-    };
-    return map[color] || 3; // デフォルトはyellow
   }
 }

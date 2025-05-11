@@ -1,6 +1,7 @@
 import { Controller, Param, Post } from '@nestjs/common';
 import { RagService } from './rag.service';
 import { DiaryService } from 'src/diary/diary.service';
+import { mapColorToEmotion } from 'src/common/utils/emotion.util';
 
 @Controller('rag')
 export class RagController {
@@ -34,15 +35,4 @@ export class RagController {
       })),
     };
   }
-}
-
-function mapColorToEmotion(color: string): number {
-  const map: Record<string, number> = {
-    red: 1,
-    blue: 2,
-    green: 3,
-    orange: 4,
-    yellow: 5,
-  };
-  return map[color] ?? 3;
 }
