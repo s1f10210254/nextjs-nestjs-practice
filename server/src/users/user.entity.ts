@@ -42,4 +42,8 @@ export class User {
   // Answerとのリレーション
   @OneToMany(() => Question, (answer) => answer.user)
   answers: Question[];
+
+  // 興味の内容
+  @Column({ type: 'json', nullable: true })
+  recommended_question_ids: number[];
 }

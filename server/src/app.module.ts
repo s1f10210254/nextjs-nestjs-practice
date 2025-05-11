@@ -13,6 +13,7 @@ import { VectorModule } from './vector/vector.module';
 import { QuestionsModule } from './questions/questions.module';
 import { AnswersModule } from './answers/answers.module';
 import { RagModule } from './rag/rag.module';
+import { QuestionRecommendationModule } from './question-recommendation/question-recommendation.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { RagModule } from './rag/rag.module';
     QuestionsModule,
     AnswersModule,
     RagModule,
+    QuestionRecommendationModule,
   ],
   controllers: [AppController],
   providers: [AppService, VectorService],

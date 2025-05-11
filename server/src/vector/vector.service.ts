@@ -161,9 +161,10 @@ export class VectorService {
     return qdrantClient.search('question_entries', {
       vector: vector,
       filter: {
-        tags: {
-          $in: tags,
-        },
+        should: tags.map((tag) => ({
+          key: 'tags',
+          match: { value: tag },
+        })),
       },
       limit: topK,
     });

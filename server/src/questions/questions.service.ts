@@ -4,12 +4,14 @@ import { Question } from './entities/question.entity';
 import { Repository } from 'typeorm';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { User } from 'src/users/user.entity';
+import { VectorService } from 'src/vector/vector.service';
 
 @Injectable()
 export class QuestionsService {
   constructor(
     @InjectRepository(Question)
     private questionRepository: Repository<Question>,
+    private vectorService: VectorService, // Qdrantに保存するためのサービス
   ) {}
 
   //質問を新規作成
@@ -24,7 +26,18 @@ export class QuestionsService {
       is_anonymous: dto.is_anonymous ?? false,
       user: { id: userId } as User,
     });
-    return await this.questionRepository.save(question);
+    const saved = await this.questionRepository.save(question);
+
+    // ✅ ここでQdrantに保存
+    await this.vectorService.saveQuestionToQdrant({
+      questionId: saved.id,
+      userId: userId,
+      date: saved.created_at.toISOString(),
+      content: saved.content,
+      tags: saved.tags,
+    });
+
+    return saved;
   }
 
   //質問を全て取得

@@ -9,11 +9,12 @@ type Props = {
   params: { id: string };
 };
 export default async function QuestionDetailPage({ params }: Props) {
-  const id = Number(params.id);
+  const questionId = Number(params.id); // ← ✅ ここが重要
+  if (isNaN(questionId)) throw new Error("無効なID");
 
   try {
-    const question = await fetchQuestionById(id);
-    const answers = await fetchAnswers(id);
+    const question = await fetchQuestionById(questionId);
+    const answers = await fetchAnswers(questionId);
     return (
       <main className="p-6 space-y-8">
         <QuestionDetail question={question} />
@@ -27,7 +28,7 @@ export default async function QuestionDetailPage({ params }: Props) {
           )}
         </section>
 
-        <AnswerForm questionId={id} />
+        <AnswerForm questionId={questionId} />
       </main>
     );
   } catch (err) {
