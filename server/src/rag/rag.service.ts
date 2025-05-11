@@ -27,7 +27,7 @@ export class RagService {
 
     const filter = {
       must: [
-        { key: 'user_id', match: { value: input.userId } },
+        { key: 'userId', match: { value: input.userId } },
         {
           key: 'date',
           range: { lt: input.date },

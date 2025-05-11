@@ -19,9 +19,6 @@ export default function DiaryPage() {
   const [diary, setDiary] = useState<Diary | null>(null);
   const [similarDiaries, setSimilarDiaries] = useState<SimplifiedDiary[]>([]);
   const [loading, setLoading] = useState(true);
-  console.log("date", date);
-  console.log("diary", diary);
-  console.log("similarDiaries", similarDiaries);
 
   useEffect(() => {
     console.log("date", date);

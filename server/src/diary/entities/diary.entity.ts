@@ -30,6 +30,9 @@ export class Diary {
   @Column({ type: 'text', nullable: true })
   ai_advice_content: string;
 
+  @Column({ type: 'json', nullable: true })
+  similar_diary_ids: number[];
+
   @Column({ type: 'simple-array', nullable: true })
   tags: string[];
 

@@ -1,6 +1,6 @@
 export interface Diary {
   id: number;
-  user_id: number;
+  userId: number;
   date: string;
   weather: string | null;
   color: "red" | "orange" | "yellow" | "green" | "blue";

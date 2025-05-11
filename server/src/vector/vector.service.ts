@@ -26,8 +26,11 @@ export class VectorService {
       this.configService.get<string>('GEMINI_API_KEY'),
     );
     const result = await this.ai.models.embedContent({
-      model: 'text-embedding-004',
-      contents: { parts: [{ text }] },
+      model: 'gemini-embedding-exp-03-07',
+      contents: text,
+      config: {
+        taskType: 'SEMANTIC_SIMILARITY',
+      },
     });
     console.log('Gemini embedding response:', result);
     console.log('Embedding response:', result.embeddings);
@@ -71,7 +74,7 @@ export class VectorService {
     // コレクションを作成
     await qdrantClient.createCollection(collectionName, {
       vectors: {
-        size: 768, // 使うEmbeddingに合わせてサイズを設定（例: OpenAIは1536）
+        size: 3072, // 使うEmbeddingに合わせてサイズを設定（例: OpenAIは1536）
         distance: 'Cosine', // 類似度計算方法: Cosine, Euclidean, Dot
       },
     });

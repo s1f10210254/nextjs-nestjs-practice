@@ -14,7 +14,6 @@ import { CreateDiaryDto } from './dto/create-diary.dto';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { JWTPayload } from 'src/common/interface/JWTPayload.interface';
 import { RagService } from 'src/rag/rag.service';
-import { mapColorToEmotion } from 'src/common/utils/emotion.util';
 
 @Controller('diary')
 export class DiaryController {
@@ -34,15 +33,9 @@ export class DiaryController {
     );
     if (!diary) throw new NotFoundException('指定された日の日記は存在しません');
 
-    const emotion = mapColorToEmotion(diary.color);
-    const similarDiaries = await this.ragService.findSimilarUserDiaries({
-      userId: user.sub,
-      date: diary.date,
-      content: diary.recorded_content,
-      tags: diary.tags ?? [],
-      emotion,
-    });
-
+    const similarDiaries = await this.diaryService.findDiariesByIds(
+      diary.similar_diary_ids ?? [],
+    );
     return {
       diary,
       similarDiaries: similarDiaries.map((d) => ({
@@ -81,6 +74,7 @@ export class DiaryController {
     };
   }
 
+  // 更新
   @Put(':date')
   async updateDiary(
     @Param('date') date: string,

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Diary } from './entities/diary.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreateDiaryDto } from './dto/create-diary.dto';
 import { UpdateDiaryDto } from './dto/update-diary.dto';
 import { VectorService } from 'src/vector/vector.service';
@@ -36,6 +36,17 @@ export class DiaryService {
     });
     if (!diary) throw new NotFoundException('Diary not found');
     return diary;
+  }
+
+  // IDで日記を複数取得するメソッド
+  async findDiariesByIds(ids: number[]): Promise<Diary[]> {
+    if (!ids.length) return [];
+    return this.diaryRepository.find({
+      where: { id: In(ids) },
+      order: {
+        date: 'DESC',
+      },
+    });
   }
 
   //日記を新規作成するメソッド
@@ -77,6 +88,7 @@ export class DiaryService {
 
     //4: AIアドバイスを日記に保存
     savedDiary.ai_advice_content = advice;
+    savedDiary.similar_diary_ids = similarDiaries.map((d) => d.id);
     await this.diaryRepository.save(savedDiary);
     return {
       diary: savedDiary,
@@ -129,6 +141,7 @@ export class DiaryService {
     //4: AIアドバイスを日記に保存
     await this.diaryRepository.update(diary.id, {
       ai_advice_content: advice,
+      similar_diary_ids: similarDiaries.map((d) => d.id),
     });
 
     // 更新済みDiaryを再取得して返却
